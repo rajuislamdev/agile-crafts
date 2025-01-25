@@ -5,15 +5,16 @@
 
 import 'package:flutter_data/flutter_data.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:agile_crafts/data/models/product_model.dart';
+import 'package:agile_crafts/data/models/login_response.dart';
+import 'package:agile_crafts/data/models/product.dart';
 
 // ignore: prefer_function_declarations_over_variables
 ConfigureRepositoryLocalStorage configureRepositoryLocalStorage = ({FutureFn<String>? baseDirFn, List<int>? encryptionKey, LocalStorageClearStrategy? clear}) {
   if (!kIsWeb) {
-    
+    baseDirFn ??= () => getApplicationDocumentsDirectory().then((dir) => dir.path);
   } else {
     baseDirFn ??= () => '';
   }
@@ -29,14 +30,16 @@ ConfigureRepositoryLocalStorage configureRepositoryLocalStorage = ({FutureFn<Str
 };
 
 final repositoryProviders = <String, Provider<Repository<DataModelMixin>>>{
-  'products': productsRepositoryProvider
+  'loginResponses': loginResponsesRepositoryProvider,
+'products': productsRepositoryProvider
 };
 
 final repositoryInitializerProvider =
   FutureProvider<RepositoryInitializer>((ref) async {
+    DataHelpers.setInternalType<LoginResponse>('loginResponses');
     DataHelpers.setInternalType<Product>('products');
-    final adapters = <String, RemoteAdapter>{'products': ref.watch(internalProductsRemoteAdapterProvider)};
-    final remotes = <String, bool>{'products': true};
+    final adapters = <String, RemoteAdapter>{'loginResponses': ref.watch(internalLoginResponsesRemoteAdapterProvider), 'products': ref.watch(internalProductsRemoteAdapterProvider)};
+    final remotes = <String, bool>{'loginResponses': true, 'products': true};
 
     await ref.watch(graphNotifierProvider).initialize();
 
@@ -54,10 +57,12 @@ final repositoryInitializerProvider =
     return RepositoryInitializer();
 });
 extension RepositoryWidgetRefX on WidgetRef {
+  Repository<LoginResponse> get loginResponses => watch(loginResponsesRepositoryProvider)..remoteAdapter.internalWatch = watch;
   Repository<Product> get products => watch(productsRepositoryProvider)..remoteAdapter.internalWatch = watch;
 }
 
 extension RepositoryRefX on Ref {
 
+  Repository<LoginResponse> get loginResponses => watch(loginResponsesRepositoryProvider)..remoteAdapter.internalWatch = watch as Watcher;
   Repository<Product> get products => watch(productsRepositoryProvider)..remoteAdapter.internalWatch = watch as Watcher;
 }
