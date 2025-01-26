@@ -35,7 +35,7 @@ class $ProductHiveLocalAdapter = HiveLocalAdapter<Product>
     with $ProductLocalAdapter;
 
 class $ProductRemoteAdapter = RemoteAdapter<Product>
-    with ProductFetchAdapter, ProductCreateAdapter;
+    with FetchProductAdapter<Product>, AddProductAdapter<Product>;
 
 final internalProductsRemoteAdapterProvider = Provider<RemoteAdapter<Product>>(
     (ref) => $ProductRemoteAdapter(
@@ -45,10 +45,10 @@ final productsRepositoryProvider =
     Provider<Repository<Product>>((ref) => Repository<Product>(ref));
 
 extension ProductDataRepositoryX on Repository<Product> {
-  ProductFetchAdapter get productFetchAdapter =>
-      remoteAdapter as ProductFetchAdapter;
-  ProductCreateAdapter get productCreateAdapter =>
-      remoteAdapter as ProductCreateAdapter;
+  FetchProductAdapter<Product> get fetchProductAdapter =>
+      remoteAdapter as FetchProductAdapter<Product>;
+  AddProductAdapter<Product> get addProductAdapter =>
+      remoteAdapter as AddProductAdapter<Product>;
 }
 
 extension ProductRelationshipGraphNodeX on RelationshipGraphNode<Product> {}

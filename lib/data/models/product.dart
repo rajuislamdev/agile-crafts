@@ -5,10 +5,8 @@ import 'package:json_annotation/json_annotation.dart';
 part 'product.g.dart';
 
 @JsonSerializable()
-@DataRepository([
-  ProductFetchAdapter,
-  ProductCreateAdapter
-]) // Use custom adapter for product
+@DataRepository(
+    [FetchProductAdapter, AddProductAdapter]) // Use custom adapter for product
 class Product extends DataModel<Product> {
   @override
   final int? id;

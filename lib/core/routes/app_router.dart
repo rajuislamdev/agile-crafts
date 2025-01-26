@@ -1,6 +1,7 @@
 import 'package:agile_crafts/features/auth/views/login_page.dart';
 import 'package:flutter/material.dart';
 
+import '../../features/product/views/add_product_page.dart';
 import '../../features/product/views/products_page.dart';
 import '../widgets/error_view.dart';
 
@@ -11,6 +12,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => LoginPage());
       case '/products':
         return MaterialPageRoute(builder: (_) => const ProductsPage());
+      case '/add-product':
+        return MaterialPageRoute(builder: (_) => AddProductPage());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

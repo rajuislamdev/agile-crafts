@@ -33,7 +33,7 @@ class MyApp extends ConsumerWidget {
                 const ProductsPage(), // Replace with your actual home screen
           ),
           onGenerateRoute: AppRouter.generateRoute,
-          initialRoute: AppRoutes.login,
+          initialRoute: AppRoutes.products,
         );
       },
     );
