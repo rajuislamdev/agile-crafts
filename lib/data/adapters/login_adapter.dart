@@ -14,19 +14,34 @@ mixin LoginAdapter on RemoteAdapter<LoginResponse> {
       'Abp.TenantId': '10',
     };
 
-    // The body should be a JSON string
+    // Prepare the request body
     final body = jsonEncode({
       'userNameOrEmailAddress': loginRequest.userNameOrEmailAddress,
       'password': loginRequest.password,
     });
 
-    final response = await sendRequest(
-      Uri.parse(Environment.apiUrl + ApiEndpoints.loginUrl),
-      method: DataRequestMethod.POST,
-      headers: headers,
-      body: body,
-    );
+    try {
+      // Send the request
+      final response = await sendRequest(
+        Uri.parse(Environment.apiUrl + ApiEndpoints.loginUrl),
+        method: DataRequestMethod.POST,
+        headers: headers,
+        body: body,
+      );
 
-    return response;
+      // Parse the response to a Map
+      final jsonResponse = jsonDecode(response.body);
+
+      // Check if `result` key exists
+      if (jsonResponse['result'] != null) {
+        // Deserialize into LoginResponse
+        return LoginResponse.fromJson(jsonResponse['result']);
+      } else {
+        throw Exception('Invalid response: "result" field missing');
+      }
+    } catch (e) {
+      // Handle errors (e.g., log the error, rethrow, or return a default response)
+      throw Exception('Login failed: $e');
+    }
   }
 }

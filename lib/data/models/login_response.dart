@@ -13,4 +13,9 @@ class LoginResponse extends DataModel<LoginResponse> {
   final String accessToken;
 
   LoginResponse({this.id, required this.accessToken});
+
+  factory LoginResponse.fromJson(Map<String, dynamic> json) =>
+      _$LoginResponseFromJson(json['result']);
+
+  Map<String, dynamic> toJson() => _$LoginResponseToJson(this);
 }

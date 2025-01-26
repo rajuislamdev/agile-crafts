@@ -1,4 +1,5 @@
 import 'package:agile_crafts/core/routes/app_router.dart';
+import 'package:agile_crafts/features/product/views/products_page.dart';
 import 'package:agile_crafts/main.data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -29,7 +30,7 @@ class MyApp extends ConsumerWidget {
             error: (error, _) => Center(child: Text('Error: $error')),
             loading: () => const Center(child: CircularProgressIndicator()),
             data: (_) =>
-                const Placeholder(), // Replace with your actual home screen
+                const ProductsPage(), // Replace with your actual home screen
           ),
           onGenerateRoute: AppRouter.generateRoute,
           initialRoute: AppRoutes.login,

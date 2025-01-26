@@ -19,12 +19,12 @@ mixin $LoginResponseLocalAdapter on LocalAdapter<LoginResponse> {
   @override
   LoginResponse deserialize(map) {
     map = transformDeserialize(map);
-    return _$LoginResponseFromJson(map);
+    return LoginResponse.fromJson(map);
   }
 
   @override
   Map<String, dynamic> serialize(model, {bool withRelationships = true}) {
-    final map = _$LoginResponseToJson(model);
+    final map = model.toJson();
     return transformSerialize(map, withRelationships: withRelationships);
   }
 }
@@ -57,11 +57,13 @@ extension LoginResponseRelationshipGraphNodeX
 // JsonSerializableGenerator
 // **************************************************************************
 
-LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) =>
-    LoginResponse(
-      id: json['id'] as String?,
-      accessToken: json['result']['accessToken'] as String,
-    );
+LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) {
+  print('This is fucking login response : ${json}');
+  return LoginResponse(
+    id: json['id'] as String?,
+    accessToken: json['accessToken'] as String,
+  );
+}
 
 Map<String, dynamic> _$LoginResponseToJson(LoginResponse instance) =>
     <String, dynamic>{
