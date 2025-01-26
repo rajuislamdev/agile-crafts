@@ -1,18 +1,21 @@
+import 'package:agile_crafts/data/models/product.dart';
+import 'package:agile_crafts/main.data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:gap/gap.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../core/utils/text_style.dart';
 import '../../../core/widgets/custom_button.dart';
 
-class AddProductPage extends StatelessWidget {
+class AddProductPage extends HookConsumerWidget {
   AddProductPage({super.key});
   final GlobalKey<FormBuilderState> formKey = GlobalKey<FormBuilderState>();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Product'),
@@ -111,8 +114,21 @@ class AddProductPage extends StatelessWidget {
                 Gap(20.w),
                 CustomButton(
                   title: 'Add Product',
-                  onTap: () {
-                    if (formKey.currentState!.saveAndValidate()) {}
+                  onTap: () async {
+                    if (formKey.currentState!.saveAndValidate()) {
+                      Product model =
+                          Product.fromJson(formKey.currentState!.value);
+                      await ref.products.save(
+                        model,
+                        onSuccess: (data, label, adapter) async {
+                          final model = await adapter.onSuccess(data, label);
+                          return model as Product;
+                        },
+                        onError: (e, label, adapter) async {
+                          return adapter.onError(e, label);
+                        },
+                      );
+                    }
                   },
                 )
               ],
